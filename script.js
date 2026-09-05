@@ -1,60 +1,65 @@
 // Register ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
-// Custom Cursor
-const cursor = document.querySelector('.custom-cursor');
-const cursorGlow = document.querySelector('.cursor-glow');
-let mouseX = 0;
-let mouseY = 0;
-let glowX = 0;
-let glowY = 0;
+// Check if touch device
+const isTouchDevice = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) || window.matchMedia("(pointer: coarse)").matches);
 
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    
-    cursor.style.left = `${mouseX}px`;
-    cursor.style.top = `${mouseY}px`;
-});
+// Custom Cursor (Only for non-touch devices)
+if (!isTouchDevice) {
+    const cursor = document.querySelector('.custom-cursor');
+    const cursorGlow = document.querySelector('.cursor-glow');
+    let mouseX = 0;
+    let mouseY = 0;
+    let glowX = 0;
+    let glowY = 0;
 
-// Smooth follow for cursor glow
-gsap.ticker.add(() => {
-    glowX += (mouseX - glowX) * 0.15;
-    glowY += (mouseY - glowY) * 0.15;
-    cursorGlow.style.left = `${glowX}px`;
-    cursorGlow.style.top = `${glowY}px`;
-});
-
-// Magnetic Buttons and Hover States
-const magneticBtns = document.querySelectorAll('.magnetic-btn, .horizontal-panel');
-magneticBtns.forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-        cursorGlow.style.width = '80px';
-        cursorGlow.style.height = '80px';
-        cursorGlow.style.borderColor = 'rgba(255,255,255,0.8)';
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursor.style.left = `${mouseX}px`;
+        cursor.style.top = `${mouseY}px`;
     });
-    btn.addEventListener('mouseleave', () => {
-        cursorGlow.style.width = '40px';
-        cursorGlow.style.height = '40px';
-        cursorGlow.style.borderColor = 'rgba(255,255,255,0.2)';
-        gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "power2.out" });
+
+    // Smooth follow for cursor glow
+    gsap.ticker.add(() => {
+        glowX += (mouseX - glowX) * 0.15;
+        glowY += (mouseY - glowY) * 0.15;
+        cursorGlow.style.left = `${glowX}px`;
+        cursorGlow.style.top = `${glowY}px`;
     });
-    
-    if(btn.classList.contains('magnetic-btn')) {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            gsap.to(btn, {
-                x: x * 0.3,
-                y: y * 0.3,
-                duration: 0.5,
-                ease: "power2.out"
-            });
+
+    // Magnetic Buttons and Hover States
+    const magneticBtns = document.querySelectorAll('.magnetic-btn, .horizontal-panel');
+    magneticBtns.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            cursorGlow.style.width = '80px';
+            cursorGlow.style.height = '80px';
+            cursorGlow.style.borderColor = 'rgba(255,255,255,0.8)';
         });
-    }
-});
+        btn.addEventListener('mouseleave', () => {
+            cursorGlow.style.width = '40px';
+            cursorGlow.style.height = '40px';
+            cursorGlow.style.borderColor = 'rgba(255,255,255,0.2)';
+            gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "power2.out" });
+        });
+        
+        if(btn.classList.contains('magnetic-btn')) {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                gsap.to(btn, {
+                    x: x * 0.3,
+                    y: y * 0.3,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+        }
+    });
+}
 
 // Hero Animation
 const tlHero = gsap.timeline();
@@ -65,16 +70,18 @@ tlHero.from(".badge", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" })
       .from(".orb", { scale: 0, opacity: 0, duration: 1.5, ease: "expo.out" }, "-=1");
 
 // Parallax for Orbs
-window.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 20;
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    
-    gsap.to(".orb", { x: x * 2, y: y * 2, duration: 1 });
-    gsap.to(".orb-ring", { x: x * -1, y: y * -1, duration: 1 });
-    gsap.to(".orb-ring-2", { x: x * 1.5, y: y * 1.5, duration: 1 });
-});
+if (!isTouchDevice) {
+    window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        
+        gsap.to(".orb", { x: x * 2, y: y * 2, duration: 1 });
+        gsap.to(".orb-ring", { x: x * -1, y: y * -1, duration: 1 });
+        gsap.to(".orb-ring-2", { x: x * 1.5, y: y * 1.5, duration: 1 });
+    });
+}
 
-// Stats Parallax
+// Stats Parallax (Enabled globally)
 gsap.utils.toArray('.parallax-item').forEach(item => {
     const speed = item.dataset.speed;
     gsap.to(item, {
@@ -90,7 +97,7 @@ gsap.utils.toArray('.parallax-item').forEach(item => {
 });
 
 // Horizontal Scroll Wrapper
-if(window.innerWidth > 900) {
+if(window.innerWidth > 1024) {
     const horizontalContainer = document.querySelector('.horizontal-container');
     const panels = gsap.utils.toArray('.horizontal-panel');
     
