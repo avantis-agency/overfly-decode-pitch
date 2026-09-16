@@ -2,7 +2,7 @@
 <html lang="pt-BR" class="lenis lenis-smooth">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>O Fim das Objeções | Avantis Singularity</title>
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
         --grid: rgba(255,255,255,0.05);
     }
     
-    * { box-sizing: border-box; cursor: none; }
+    * { box-sizing: border-box; }
     
     body, html {
         margin: 0; padding: 0;
@@ -32,21 +32,25 @@
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* Custom Cursor */
-    .cursor {
-        position: fixed; top: 0; left: 0; width: 12px; height: 12px;
-        background: var(--neon); border-radius: 50%;
-        pointer-events: none; z-index: 10000;
-        transform: translate(-50%, -50%);
-        transition: width 0.3s, height 0.3s, background 0.3s;
-        mix-blend-mode: screen;
-    }
-    .cursor-follower {
-        position: fixed; top: 0; left: 0; width: 40px; height: 40px;
-        border: 1px solid rgba(239, 95, 165, 0.4); border-radius: 50%;
-        pointer-events: none; z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition: 0.1s ease-out;
+    /* Custom Cursor (Hidden on Mobile) */
+    .cursor, .cursor-follower { display: none; }
+    @media (pointer: fine) {
+        * { cursor: none; }
+        .cursor {
+            display: block; position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background: var(--neon); border-radius: 50%;
+            pointer-events: none; z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: screen;
+        }
+        .cursor-follower {
+            display: block; position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+            border: 1px solid rgba(239, 95, 165, 0.4); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: 0.1s ease-out;
+        }
     }
     
     /* Grid Background */
@@ -69,13 +73,19 @@
 
     /* Layout */
     .container {
-        max-width: 1200px; margin: 0 auto; padding: 0 40px;
+        max-width: 1200px; margin: 0 auto; padding: 0 20px;
+    }
+    @media (min-width: 768px) {
+        .container { padding: 0 40px; }
     }
     
     section {
         min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-        padding: 120px 0; border-bottom: 1px solid var(--grid);
+        padding: 80px 0; border-bottom: 1px solid var(--grid);
         position: relative;
+    }
+    @media (min-width: 768px) {
+        section { padding: 120px 0; }
     }
 
     /* Typography */
@@ -83,66 +93,102 @@
     
     .hero { text-align: center; align-items: center; }
     .hero .badge {
-        font-family: 'Inter'; font-size: 11px; letter-spacing: 4px;
+        font-family: 'Inter'; font-size: 11px; letter-spacing: 2px;
         color: var(--neon); border: 1px solid var(--neon); padding: 8px 16px;
-        border-radius: 50px; margin-bottom: 40px; display: inline-block;
+        border-radius: 50px; margin-bottom: 30px; display: inline-block;
         background: rgba(239, 95, 165, 0.05);
     }
     .hero h1 {
-        font-size: clamp(4rem, 10vw, 8rem); font-weight: 600; line-height: 0.9;
-        letter-spacing: -3px; color: #fff;
+        font-size: clamp(2.5rem, 8vw, 8rem); font-weight: 600; line-height: 1;
+        letter-spacing: -1px; color: #fff; border-left: none; padding-left: 0;
     }
+    @media (min-width: 768px) {
+        .hero h1 { line-height: 0.9; letter-spacing: -3px; border-left: 8px solid var(--neon); padding-left: 24px; }
+        .hero .badge { letter-spacing: 4px; margin-bottom: 40px; }
+    }
+    
     .hero p {
-        font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--muted); max-width: 600px;
-        margin-top: 40px; font-weight: 300;
+        font-size: clamp(1rem, 1.5vw, 1.5rem); color: var(--muted); max-width: 600px;
+        margin-top: 20px; font-weight: 300; line-height: 1.6; padding: 0 10px;
+    }
+    @media (min-width: 768px) {
+        .hero p { margin-top: 40px; padding: 0; }
     }
 
     .chapter-num {
-        font-family: 'General Sans'; font-size: 180px; font-weight: 700;
+        font-family: 'General Sans'; font-size: 80px; font-weight: 700;
         color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.05);
-        position: absolute; top: -20px; left: -20px; z-index: -1;
+        position: absolute; top: 10px; left: 10px; z-index: -1;
         line-height: 1; pointer-events: none;
     }
+    @media (min-width: 768px) {
+        .chapter-num { font-size: 180px; top: -20px; left: -20px; }
+    }
 
-    .content-wrapper { display: grid; grid-template-columns: 4fr 6fr; gap: 80px; align-items: start; }
-    .content-wrapper.reverse { grid-template-columns: 6fr 4fr; }
+    .content-wrapper { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
+    @media (min-width: 768px) {
+        .content-wrapper { grid-template-columns: 4fr 6fr; gap: 80px; }
+        .content-wrapper.reverse { grid-template-columns: 6fr 4fr; }
+    }
     
-    .sec-title h2 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 500; letter-spacing: -2px; line-height: 1; }
-    .sec-title .line { width: 40px; height: 2px; background: var(--neon); margin-top: 20px; display: block; }
+    .sec-title h2 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 500; letter-spacing: -1px; line-height: 1.1; }
+    @media (min-width: 768px) {
+        .sec-title h2 { letter-spacing: -2px; line-height: 1; }
+    }
+    .sec-title .line { width: 40px; height: 2px; background: var(--neon); margin-top: 15px; display: block; }
     
-    .sec-body p { font-size: 1.25rem; line-height: 1.8; margin-bottom: 30px; font-weight: 300; }
+    .sec-body p { font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px; font-weight: 300; }
+    @media (min-width: 768px) {
+        .sec-body p { font-size: 1.25rem; line-height: 1.8; margin-bottom: 30px; }
+    }
     .sec-body strong { font-weight: 500; color: #fff; }
     
     /* Interactive Glass Blocks */
     .glass-panel {
         background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-        padding: 40px; border-radius: 4px; position: relative; overflow: hidden;
+        padding: 25px; border-radius: 4px; position: relative; overflow: hidden;
         transition: border 0.5s, background 0.5s;
     }
-    .glass-panel:hover {
-        border-color: rgba(239, 95, 165, 0.3);
-        background: rgba(239, 95, 165, 0.02);
+    @media (min-width: 768px) {
+        .glass-panel { padding: 40px; }
     }
-    .glass-panel::before {
-        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-        transform: skewX(-20deg); transition: 0.5s;
+    @media (pointer: fine) {
+        .glass-panel:hover {
+            border-color: rgba(239, 95, 165, 0.3);
+            background: rgba(239, 95, 165, 0.02);
+        }
+        .glass-panel::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: skewX(-20deg); transition: 0.5s;
+        }
+        .glass-panel:hover::before { left: 150%; }
     }
-    .glass-panel:hover::before { left: 150%; }
 
-    .dialogue { margin-bottom: 25px; }
-    .dialogue span { display: block; font-size: 0.85rem; color: var(--neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-    .dialogue p { margin: 0; font-size: 1.3rem; font-style: italic; color: #fff; }
+    .dialogue { margin-bottom: 20px; }
+    .dialogue span { display: block; font-size: 0.75rem; color: var(--neon); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .dialogue p { margin: 0; font-size: 1.1rem; font-style: italic; color: #fff; }
+    @media (min-width: 768px) {
+        .dialogue span { font-size: 0.85rem; letter-spacing: 2px; }
+        .dialogue p { font-size: 1.3rem; }
+    }
 
     /* Script Arsenal */
-    .arsenal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px; }
-    .arsenal-card { border-top: 1px solid var(--grid); padding-top: 30px; }
-    .arsenal-card h3 { font-size: 1.2rem; color: var(--neon); margin-bottom: 15px; }
+    .arsenal-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 40px; }
+    @media (min-width: 768px) {
+        .arsenal-grid { grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px; }
+    }
+    .arsenal-card { border-top: 1px solid var(--grid); padding-top: 20px; }
+    @media (min-width: 768px) {
+        .arsenal-card { padding-top: 30px; }
+    }
+    .arsenal-card h3 { font-size: 1.1rem; color: var(--neon); margin-bottom: 10px; }
+    @media (min-width: 768px) {
+        .arsenal-card h3 { font-size: 1.2rem; margin-bottom: 15px; }
+    }
 
-    /* GSAP Reveal Classes */
-    .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
-    .reveal-text > div { transform: translateY(100%); opacity: 0; }
-
+    .gs-fade { opacity: 0; }
+    .gs-title { opacity: 0; }
 </style>
 </head>
 <body>
@@ -182,60 +228,59 @@
     <section>
         <div class="chapter-num gs-scroll">02</div>
         <div class="content-wrapper reverse">
+            <div class="sec-title">
+                <h2 class="gs-title">A Morte<br>Das Perguntas</h2>
+                <span class="line gs-width"></span>
+            </div>
             <div class="sec-body gs-fade">
                 <p>O jornalista Warren Berger provou: uma criança entre 2 e 5 anos faz cerca de <strong>40 mil perguntas</strong>. A escola entra e atrofia esse músculo, premiando apenas a "resposta certa".</p>
                 <p>O reflexo disso é o vendedor mediano. Ele tem pavor do silêncio. Assim que o cliente senta, ele começa pelo <em>Como</em>.</p>
                 <p>Apresenta o dashboard. Fala de prazos. Dá respostas para perguntas que não foram feitas. Mas o seu cliente já leu o Google. Ele não precisa de respostas técnicas, precisa de <strong>curadoria</strong>.</p>
             </div>
-            <div class="sec-title">
-                <h2 class="gs-title" style="text-align: right;">A Morte<br>Das Perguntas</h2>
-                <span class="line gs-width" style="margin-left: auto;"></span>
-            </div>
         </div>
     </section>
 
     <!-- Section 3 -->
-    <section>
+    <section style="min-height: auto; padding-top: 80px;">
         <div class="chapter-num gs-scroll">03</div>
-        <h2 class="gs-title" style="margin-bottom: 60px; text-align: center;">O Framework de Desconstrução</h2>
+        <h2 class="gs-title" style="margin-bottom: 40px;">O Framework</h2>
         
-        <div class="glass-panel gs-fade" style="margin-bottom: 40px;">
-            <h3>Fase 1: O "Por Que" (Diagnóstico)</h3>
-            <p style="color:var(--muted); font-size:1.1rem; margin-bottom: 30px;">O amador mostra a solução. O profissional escava a ferida até o cliente dar preço ao problema.</p>
+        <div class="glass-panel gs-fade" style="margin-bottom: 30px;">
+            <h3>Fase 1: O "Por Que"</h3>
+            <p style="color:var(--muted); font-size:0.95rem; margin-bottom: 20px;">O amador mostra a solução. O profissional escava a ferida até o cliente dar preço ao problema.</p>
             <div class="dialogue">
-                <span>O Vendedor (Você)</span>
-                <p>"Maurício, como você acompanha o fechamento de metas hoje?"</p>
+                <span>Você</span>
+                <p>"Maurício, como você acompanha as metas hoje?"</p>
             </div>
             <div class="dialogue">
-                <span>O Cliente</span>
-                <p>"No WhatsApp. O vendedor manda a planilha e a gente tenta consolidar."</p>
+                <span>Cliente</span>
+                <p>"No WhatsApp. A gente tenta consolidar."</p>
             </div>
             <div class="dialogue">
-                <span>O Vendedor (O Golpe)</span>
-                <p>"E essa lentidão de depender de planilha já te custou caixa? Você já perdeu uma negociação porque demorou para ver a informação?"</p>
+                <span>O Golpe</span>
+                <p>"Essa lentidão já te custou caixa? Você já perdeu negociação por demorar na informação?"</p>
             </div>
         </div>
 
-        <div class="glass-panel gs-fade" style="margin-bottom: 40px;">
+        <div class="glass-panel gs-fade" style="margin-bottom: 30px;">
             <h3>Fase 2: O Salto "E se..."</h3>
-            <p style="color:var(--muted); font-size:1.1rem; margin-bottom: 30px;">Injeção de imaginação. Faça o cliente argumentar a favor do seu produto e desenhar a utopia.</p>
+            <p style="color:var(--muted); font-size:0.95rem; margin-bottom: 20px;">Injeção de imaginação. Faça o cliente argumentar a favor do seu produto.</p>
             <div class="dialogue">
-                <span>O Vendedor</span>
-                <p>"E se você tivesse essa visão em tempo real numa única tela? O que mudaria na sua operação amanhã?"</p>
+                <span>Você</span>
+                <p>"E se você tivesse essa visão em tempo real, o que mudaria amanhã?"</p>
             </div>
             <div class="dialogue">
-                <span>O Cliente (O Checkmate)</span>
-                <p>"Eu tomaria decisões na hora. Pararia de perder 20 mil reais por mês com furo de follow-up."</p>
+                <span>Checkmate</span>
+                <p>"Tomaria decisões na hora. Pararia de perder 20 mil reais com furo de follow-up."</p>
             </div>
-            <p style="margin-top:20px; font-weight: 500;">Não foi você quem disse que o sistema economiza 20 mil. Foi ele. Ele é incapaz de discordar das próprias palavras.</p>
         </div>
 
         <div class="glass-panel gs-fade">
-            <h3>Fase 3: O "Como" (A Cura)</h3>
-            <p style="color:var(--muted); font-size:1.1rem; margin-bottom: 30px;">Você recebeu permissão moral para cobrar. A objeção de preço deixa de existir quando comparada com a dor.</p>
+            <h3>Fase 3: O "Como"</h3>
+            <p style="color:var(--muted); font-size:0.95rem; margin-bottom: 20px;">Permissão moral para cobrar. A objeção derrete comparada com a dor.</p>
             <div class="dialogue">
-                <span>O Vendedor</span>
-                <p>"Você me disse que o modelo antigo te faz sangrar 20 mil reais todo mês. É exatamente por isso que nossa estrutura elimina o WhatsApp e te dá controle absoluto em tempo real."</p>
+                <span>Você</span>
+                <p>"Você me disse que sangra 20 mil reais. É por isso que nossa estrutura elimina o WhatsApp e te dá controle absoluto em tempo real."</p>
             </div>
         </div>
     </section>
@@ -245,21 +290,21 @@
         <div class="chapter-num gs-scroll">04</div>
         <div class="sec-title">
             <h2 class="gs-title">Arsenal Operacional</h2>
-            <p class="gs-fade" style="color:var(--muted); margin-top:20px;">As Leis Inquebráveis do Acesso Final.</p>
+            <p class="gs-fade" style="color:var(--muted); margin-top:10px; margin-bottom:30px;">As Leis Inquebráveis do Acesso Final.</p>
         </div>
 
         <div class="arsenal-grid">
             <div class="arsenal-card gs-fade">
-                <h3>01. A Lei do Vácuo Financeiro</h3>
-                <p>Quem fala a primeira palavra após anunciar o preço, perde o negócio. Diga o valor e sustente o silêncio absoluto. A pressão psicológica transfere a posse da decisão.</p>
+                <h3>01. O Vácuo Financeiro</h3>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--muted);">Quem fala a primeira palavra após anunciar o preço, perde o negócio. Diga o valor e sustente o silêncio. A pressão transfere a posse da decisão.</p>
             </div>
             <div class="arsenal-card gs-fade">
                 <h3>02. A Lei do Desvio</h3>
-                <p>Se a palavra "caro" surgir, nunca defenda o seu preço. Rebata com contraste: <em>"Caro em relação ao quê? Aos R$ 20 mil que você acabou de confessar que perde mensalmente?"</em></p>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--muted);">Nunca defenda o seu preço. Rebata com contraste: <em>"Caro em relação ao quê? Aos R$ 20 mil que você perde mensalmente?"</em></p>
             </div>
-            <div class="arsenal-card gs-fade" style="grid-column: 1 / -1; background: var(--neon); padding: 40px; border-radius: 4px; color: var(--bg);">
-                <h3 style="color: var(--bg);">03. A Lei da Ancoragem Visual</h3>
-                <p style="color: rgba(0,0,0,0.8); font-weight: 500;">O argumento verbal evapora. O design permanece. Assim que aplicar a Fase 3, envie o link da sua <strong>Proposta Magnética</strong>. O impacto visual Dark SaaS aniquila qualquer imagem de "freelancer", forçando o cliente a enxergar você como uma corporação de elite.</p>
+            <div class="arsenal-card gs-fade" style="grid-column: 1 / -1; background: var(--neon); padding: 30px; border-radius: 4px; color: var(--bg); border-top: none;">
+                <h3 style="color: var(--bg);">03. A Ancoragem Visual</h3>
+                <p style="color: rgba(0,0,0,0.8); font-weight: 500; font-size: 0.95rem; line-height: 1.6;">O argumento evapora. O design permanece. Envie o link da sua <strong>Proposta Magnética</strong>. O impacto visual Dark SaaS aniquila a imagem de freelancer.</p>
             </div>
         </div>
     </section>
@@ -277,28 +322,32 @@
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
 
-    // Custom Cursor
+    // Custom Cursor logic
     const cursor = document.getElementById('cursor');
     const follower = document.getElementById('cursor-follower');
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.6, ease: 'power3.out' });
-    });
-    document.querySelectorAll('a, .glass-panel, .badge').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'translate(-50%, -50%) scale(2)';
-            follower.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            follower.style.borderColor = 'transparent';
-            follower.style.background = 'rgba(239, 95, 165, 0.2)';
+    
+    // Only run cursor animations if the device supports fine pointing (mouse)
+    if (window.matchMedia("(pointer: fine)").matches) {
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.6, ease: 'power3.out' });
         });
-        el.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            follower.style.transform = 'translate(-50%, -50%) scale(1)';
-            follower.style.borderColor = 'rgba(239, 95, 165, 0.4)';
-            follower.style.background = 'transparent';
+        document.querySelectorAll('a, .glass-panel, .badge').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+                follower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                follower.style.borderColor = 'transparent';
+                follower.style.background = 'rgba(239, 95, 165, 0.2)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                follower.style.transform = 'translate(-50%, -50%) scale(1)';
+                follower.style.borderColor = 'rgba(239, 95, 165, 0.4)';
+                follower.style.background = 'transparent';
+            });
         });
-    });
+    }
 
     // Reading Progress
     window.addEventListener('scroll', () => {
@@ -310,19 +359,23 @@
     // GSAP Animations
     gsap.registerPlugin(ScrollTrigger);
     
+    // Ensure elements are visible initially before GSAP overwrites them
+    gsap.set('.gs-title', { y: 30, opacity: 0 });
+    gsap.set('.gs-fade', { y: 20, opacity: 0 });
+    
     // Titles
     gsap.utils.toArray('.gs-title').forEach(title => {
-        gsap.fromTo(title, { y: 50, opacity: 0 }, {
-            scrollTrigger: { trigger: title, start: "top 85%" },
-            y: 0, opacity: 1, duration: 1, ease: "power4.out"
+        gsap.to(title, {
+            scrollTrigger: { trigger: title, start: "top 90%" },
+            y: 0, opacity: 1, duration: 0.8, ease: "power3.out"
         });
     });
 
     // Fades
     gsap.utils.toArray('.gs-fade').forEach(el => {
-        gsap.fromTo(el, { y: 30, opacity: 0 }, {
-            scrollTrigger: { trigger: el, start: "top 85%" },
-            y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out"
+        gsap.to(el, {
+            scrollTrigger: { trigger: el, start: "top 90%" },
+            y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "power2.out"
         });
     });
 
@@ -330,7 +383,7 @@
     gsap.utils.toArray('.gs-scroll').forEach(num => {
         gsap.to(num, {
             scrollTrigger: { trigger: num.parentElement, start: "top bottom", end: "bottom top", scrub: 1 },
-            y: 200, ease: "none"
+            y: 100, ease: "none"
         });
     });
 
@@ -338,7 +391,7 @@
     gsap.utils.toArray('.gs-width').forEach(line => {
         gsap.fromTo(line, { width: 0 }, {
             scrollTrigger: { trigger: line, start: "top 90%" },
-            width: 40, duration: 1, ease: "power3.out"
+            width: 40, duration: 0.8, ease: "power2.out"
         });
     });
 </script>
