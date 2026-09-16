@@ -1,270 +1,345 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="lenis lenis-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>O Fim das Objeções | Proposta Magnética</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<title>O Fim das Objeções | Avantis Singularity</title>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg-dark: #030806;
-        --neon-pink: #EF5FA5;
-        --text-main: #d1d5db;
-        --text-white: #ffffff;
+        --bg: #030504;
+        --neon: #EF5FA5;
+        --text: #e2e8f0;
+        --muted: #64748b;
+        --grid: rgba(255,255,255,0.05);
     }
+    
+    * { box-sizing: border-box; cursor: none; }
+    
     body, html {
         margin: 0; padding: 0;
-        background-color: var(--bg-dark);
-        color: var(--text-main);
+        background-color: var(--bg);
+        color: var(--text);
         font-family: 'Inter', sans-serif;
         overflow-x: hidden;
-        scroll-behavior: smooth;
     }
+    
+    /* Noise Overlay */
+    .noise {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        pointer-events: none; z-index: 9999; opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Custom Cursor */
+    .cursor {
+        position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+        background: var(--neon); border-radius: 50%;
+        pointer-events: none; z-index: 10000;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s, background 0.3s;
+        mix-blend-mode: screen;
+    }
+    .cursor-follower {
+        position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+        border: 1px solid rgba(239, 95, 165, 0.4); border-radius: 50%;
+        pointer-events: none; z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: 0.1s ease-out;
+    }
+    
+    /* Grid Background */
+    .grid-bg {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background-image: 
+            linear-gradient(to right, var(--grid) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+        background-size: 100px 100px;
+        z-index: -1;
+        mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    }
+
+    /* Progress Bar */
+    .progress {
+        position: fixed; top: 0; left: 0; height: 3px; background: var(--neon);
+        width: 0%; z-index: 1000; box-shadow: 0 0 10px var(--neon);
+    }
+
+    /* Layout */
     .container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 0 20px;
+        max-width: 1200px; margin: 0 auto; padding: 0 40px;
     }
+    
     section {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 80px 0;
-        opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 1s ease-out, transform 1s ease-out;
-    }
-    section.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    /* Hero */
-    .hero {
-        align-items: flex-start;
-        background: radial-gradient(circle at top left, #12050d 0%, var(--bg-dark) 70%);
-    }
-    .badge {
-        color: var(--neon-pink);
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        margin-bottom: 30px;
-        border: 1px solid rgba(239, 95, 165, 0.3);
-        padding: 6px 12px;
-        border-radius: 4px;
-        display: inline-block;
-    }
-    h1.title {
-        font-size: clamp(3rem, 8vw, 5rem);
-        color: var(--text-white);
-        line-height: 1.1;
-        margin: 0 0 20px 0;
-        font-weight: 800;
-        letter-spacing: -2px;
-        text-transform: uppercase;
-        border-left: 8px solid var(--neon-pink);
-        padding-left: 30px;
-    }
-    p.subtitle {
-        font-size: clamp(1.2rem, 3vw, 1.6rem);
-        color: var(--neon-pink);
-        max-width: 80%;
-        line-height: 1.5;
-    }
-    
-    /* Content Typography */
-    .chapter-number {
-        font-size: 20px;
-        color: var(--neon-pink);
-        font-weight: 600;
-        margin-bottom: 10px;
-        display: block;
-    }
-    h2 {
-        font-size: clamp(2rem, 5vw, 3rem);
-        color: var(--text-white);
-        margin: 0 0 30px 0;
-        letter-spacing: -1px;
-    }
-    p {
-        font-size: 1.15rem;
-        line-height: 1.8;
-        margin-bottom: 25px;
-    }
-    strong { color: var(--text-white); }
-    em { color: var(--neon-pink); font-style: normal; font-weight: 600; }
-    
-    /* Glassmorphism elements */
-    .glass-box {
-        background: rgba(239, 95, 165, 0.03);
-        border: 1px solid rgba(239, 95, 165, 0.2);
-        border-radius: 12px;
-        padding: 40px;
-        margin: 40px 0;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-    .glass-box p:last-child { margin-bottom: 0; }
-    
-    .quote {
-        border-left: 4px solid var(--neon-pink);
-        padding-left: 30px;
-        margin: 50px 0;
-        font-size: 1.5rem;
-        line-height: 1.6;
-        color: var(--text-white);
-        font-style: italic;
+        min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+        padding: 120px 0; border-bottom: 1px solid var(--grid);
+        position: relative;
     }
 
-    ul.rules { list-style: none; padding: 0; }
-    ul.rules li {
-        background: #07120e;
-        border: 1px solid #1a2923;
-        margin-bottom: 20px;
-        padding: 25px;
-        border-radius: 8px;
+    /* Typography */
+    h1, h2, h3 { font-family: 'General Sans', sans-serif; margin: 0; text-transform: uppercase; }
+    
+    .hero { text-align: center; align-items: center; }
+    .hero .badge {
+        font-family: 'Inter'; font-size: 11px; letter-spacing: 4px;
+        color: var(--neon); border: 1px solid var(--neon); padding: 8px 16px;
+        border-radius: 50px; margin-bottom: 40px; display: inline-block;
+        background: rgba(239, 95, 165, 0.05);
     }
-    ul.rules li strong { color: var(--neon-pink); display: block; margin-bottom: 10px; font-size: 1.2rem; }
+    .hero h1 {
+        font-size: clamp(4rem, 10vw, 8rem); font-weight: 600; line-height: 0.9;
+        letter-spacing: -3px; color: #fff;
+    }
+    .hero p {
+        font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--muted); max-width: 600px;
+        margin-top: 40px; font-weight: 300;
+    }
 
-    /* Nav Indicator */
-    .scroll-indicator {
-        position: absolute;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: var(--neon-pink);
-        font-size: 14px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        animation: bounce 2s infinite;
+    .chapter-num {
+        font-family: 'General Sans'; font-size: 180px; font-weight: 700;
+        color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+        position: absolute; top: -20px; left: -20px; z-index: -1;
+        line-height: 1; pointer-events: none;
     }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
-        40% { transform: translateY(-15px) translateX(-50%); }
-        60% { transform: translateY(-7px) translateX(-50%); }
+
+    .content-wrapper { display: grid; grid-template-columns: 4fr 6fr; gap: 80px; align-items: start; }
+    .content-wrapper.reverse { grid-template-columns: 6fr 4fr; }
+    
+    .sec-title h2 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 500; letter-spacing: -2px; line-height: 1; }
+    .sec-title .line { width: 40px; height: 2px; background: var(--neon); margin-top: 20px; display: block; }
+    
+    .sec-body p { font-size: 1.25rem; line-height: 1.8; margin-bottom: 30px; font-weight: 300; }
+    .sec-body strong { font-weight: 500; color: #fff; }
+    
+    /* Interactive Glass Blocks */
+    .glass-panel {
+        background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+        padding: 40px; border-radius: 4px; position: relative; overflow: hidden;
+        transition: border 0.5s, background 0.5s;
     }
+    .glass-panel:hover {
+        border-color: rgba(239, 95, 165, 0.3);
+        background: rgba(239, 95, 165, 0.02);
+    }
+    .glass-panel::before {
+        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+        transform: skewX(-20deg); transition: 0.5s;
+    }
+    .glass-panel:hover::before { left: 150%; }
+
+    .dialogue { margin-bottom: 25px; }
+    .dialogue span { display: block; font-size: 0.85rem; color: var(--neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+    .dialogue p { margin: 0; font-size: 1.3rem; font-style: italic; color: #fff; }
+
+    /* Script Arsenal */
+    .arsenal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px; }
+    .arsenal-card { border-top: 1px solid var(--grid); padding-top: 30px; }
+    .arsenal-card h3 { font-size: 1.2rem; color: var(--neon); margin-bottom: 15px; }
+
+    /* GSAP Reveal Classes */
+    .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+    .reveal-text > div { transform: translateY(100%); opacity: 0; }
+
 </style>
 </head>
 <body>
 
+<div class="noise"></div>
+<div class="grid-bg"></div>
+<div class="progress" id="progress"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
 <div class="container">
-    <section class="hero visible">
-        <div>
-            <span class="badge">Documento Confidencial Avantis</span>
-            <h1 class="title">O Fim Das<br>Objeções</h1>
-            <p class="subtitle">A arquitetura invisível que os maiores comunicadores usam para fechar vendas de alto valor sem forçar a persuasão.</p>
-        </div>
-        <div class="scroll-indicator">Role para baixo ↓</div>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="badge gs-reveal">Confidencial Avantis</div>
+        <h1 class="gs-title">O Fim Das<br><span style="color:var(--neon)">Objeções</span></h1>
+        <p class="gs-reveal">A arquitetura algorítmica de linguagem que os maiores fechadores de negócios usam para pulverizar objeções.</p>
     </section>
 
-    <section class="chapter">
-        <span class="chapter-number">01</span>
-        <h2>O Paradoxo do Comunicador</h2>
-        <p>Silvio Santos enriqueceu conversando como se estivesse na sala de estar do espectador. Flávio Augusto construiu um império com uma agressividade comercial cirúrgica. Ciro Botini vendeu bilhões na televisão ancorado em um entusiasmo incansável.</p>
-        <p>Três perfis estéticos opostos. Três vozes diferentes. E, no entanto, a mesma engrenagem invisível sustenta a conversão dos três. Eles não dominavam o mercado porque eram os mais ruidosos. Aristóteles já alertava, frustrado, que o mundo não é dos sábios, mas daqueles que entendem de pessoas.</p>
-        <p>A maior mentira do mercado corporativo é que vender exige extroversão. O resultado prático dessa mentira é um mar de profissionais com 15 anos de experiência operando como amadores. Eles entram em uma reunião de negócios e tentam ser engraçados. Tentam ser dominantes. Usam gatilhos mentais pré-fabricados.</p>
-        <p>E invariavelmente, eles perdem a venda para o vendedor introvertido.</p>
-        <div class="quote">
-            Vender não é uma batalha de persuasão. Vender é o ato de ancorar o cliente na própria realidade dele.
+    <!-- Section 1 -->
+    <section>
+        <div class="chapter-num gs-scroll">01</div>
+        <div class="content-wrapper">
+            <div class="sec-title">
+                <h2 class="gs-title">O Paradoxo do<br>Comunicador</h2>
+                <span class="line gs-width"></span>
+            </div>
+            <div class="sec-body gs-fade">
+                <p>Silvio Santos enriqueceu conversando como se estivesse na sala de estar. Flávio Augusto usou agressividade cirúrgica. Ciro Botini vendeu bilhões ancorado em entusiasmo incansável.</p>
+                <p>Três vozes opostos. A mesma engrenagem de conversão invisível.</p>
+                <p>A maior mentira do mercado é que vender exige extroversão. Profissionais com 15 anos de mercado entram em reuniões tentando ser dominantes, disparando gatilhos mentais pré-fabricados.</p>
+                <p>E invariavelmente, perdem a venda para o vendedor introvertido. Aquele que não tenta convencer. Aquele que domina o silêncio e escava a dor do outro.</p>
+            </div>
         </div>
-        <p>Por que o vendedor quieto e reservado bate a meta no dia 15? Porque ele não tenta convencer ninguém. Ele escuta. Ele presta atenção aos detalhes. Ele faz as perguntas exatas que obrigam o cliente a verbalizar a própria dor.</p>
     </section>
 
-    <section class="chapter">
-        <span class="chapter-number">02</span>
-        <h2>A Morte das 40 Mil Perguntas</h2>
-        <p>O jornalista Warren Berger passou anos estudando a ciência do questionamento. Ele descobriu que, entre os dois e os cinco anos de idade, uma criança faz cerca de 40 mil perguntas. Ela não pede apenas fatos; ela exige o "por quê" de tudo. <em>Por que o céu é azul? Por que eu preciso dormir?</em></p>
-        <p>Nós nascemos como máquinas impecáveis de investigação estrutural. E então entramos na escola.</p>
-        <p>A escola pune a pergunta e premia a "resposta certa". O aluno que levanta a mão é reprimido. O sistema atrofia o nosso músculo investigativo. O reflexo comercial disso é devastador: chegamos à fase adulta com pavor do silêncio.</p>
-        <p>Na mesa de reunião, o vendedor mediano não suporta um vácuo. Assim que o cliente senta, o vendedor tenta preencher o espaço começando pelo <em>"Como"</em>.</p>
-        <div class="glass-box">
-            <p>Ele liga os slides. Apresenta as funcionalidades do sistema, explica o prazo de implementação, detalha o formato de pagamento. Ele dispara um arsenal de respostas genéricas para perguntas que o cliente sequer formulou.</p>
+    <!-- Section 2 -->
+    <section>
+        <div class="chapter-num gs-scroll">02</div>
+        <div class="content-wrapper reverse">
+            <div class="sec-body gs-fade">
+                <p>O jornalista Warren Berger provou: uma criança entre 2 e 5 anos faz cerca de <strong>40 mil perguntas</strong>. A escola entra e atrofia esse músculo, premiando apenas a "resposta certa".</p>
+                <p>O reflexo disso é o vendedor mediano. Ele tem pavor do silêncio. Assim que o cliente senta, ele começa pelo <em>Como</em>.</p>
+                <p>Apresenta o dashboard. Fala de prazos. Dá respostas para perguntas que não foram feitas. Mas o seu cliente já leu o Google. Ele não precisa de respostas técnicas, precisa de <strong>curadoria</strong>.</p>
+            </div>
+            <div class="sec-title">
+                <h2 class="gs-title" style="text-align: right;">A Morte<br>Das Perguntas</h2>
+                <span class="line gs-width" style="margin-left: auto;"></span>
+            </div>
         </div>
-        <p>O cliente atual não precisa das suas respostas. Ele já buscou a sua empresa no Google. Já viu tutoriais, já leu fóruns, já sabe o preço da sua concorrência.</p>
-        <p>Ele tem excesso de informação e escassez de clareza. Para fechar o negócio, você precisa desaprender o roteiro da escola e instalar o framework de três pilares: <strong>O Por que, O E se, e O Como.</strong></p>
     </section>
 
-    <section class="chapter">
-        <span class="chapter-number">03</span>
-        <h2>Fase 1: O "Por que" (Diagnóstico)</h2>
-        <p>O seu único trabalho nos primeiros minutos de uma reunião não é brilhar, é abrir a ferida do cliente. A primeira fase questiona o estado atual para que ele exponha o sangramento.</p>
-        <p>Imagine que você vende um software B2B para o Maurício. O vendedor amador abre o notebook e mostra o dashboard. O profissional faz isso:</p>
-        <div class="glass-box">
-            <p><strong>Você:</strong> <em>"Maurício, me explica como você acompanha o fechamento de metas da sua equipe de vendas hoje."</em></p>
-            <p><strong>Maurício:</strong> <em>"Olha, hoje a gente usa planilha. O vendedor me manda os números no WhatsApp no fim do dia e a gente consolida."</em></p>
-            <p><strong>Você (Escavando a dor):</strong> <em>"Entendi. E quando você precisa tomar uma decisão rápida às 14h sobre um cliente específico, você consegue puxar esse dado?"</em></p>
-            <p><strong>Maurício:</strong> <em>"Putz, não. Eu tenho que chamar o vendedor, ele demora pra responder, é uma confusão."</em></p>
-            <p><strong>Você (O golpe final):</strong> <em>"Maurício, essa demora já te custou caixa? Você já perdeu uma negociação importante porque tomou a decisão tarde demais?"</em></p>
-        </div>
-        <p>O Maurício vai suspirar. Ele vai lembrar da venda gigante que perdeu na semana passada. Ele vai reclamar do vendedor que demitiu errado.</p>
-        <p>Quando o cliente verbaliza o problema, a abstração acaba. A dor acabou de ganhar uma etiqueta de preço. Ele parou de avaliar a compra de um software; ele agora está desesperado para tapar o ralo do próprio dinheiro.</p>
-    </section>
-
-    <section class="chapter">
-        <span class="chapter-number">04</span>
-        <h2>Fase 2: O Salto (E se...)</h2>
-        <p>Com a ferida exposta e latejando, você entra na Fase 2. Você não vai oferecer a cura ainda. Você vai usar o <strong>"E se..."</strong> para injetar um salto de imaginação na mente dele.</p>
-        <p>É aqui que o cliente vende o seu serviço para si mesmo.</p>
-        <div class="glass-box">
-            <p><strong>Você:</strong> <em>"Maurício, me diz uma coisa: se você tivesse toda essa visão em tempo real numa única tela, sem depender de nenhum áudio de vendedor no WhatsApp... o que mudaria na forma como você gere essa empresa amanhã?"</em></p>
-        </div>
-        <p>Faça a pergunta e mergulhe em silêncio absoluto. Assista à engenharia reversa acontecer. O Maurício vai responder:</p>
-        <p><em>"Cara... eu tomaria as decisões na hora. Eu veria que a venda travou e já ligaria pro cliente antes de ele esfriar. Eu pararia de perder 20 mil reais todo mês por causa de furos de follow-up."</em></p>
-        <p>O xeque-mate foi dado.</p>
-        <p>Não foi você quem prometeu que o sistema dele evita a perda de R$ 20 mil. Foi ele. O cliente pode lutar ferozmente contra os argumentos que saem da sua boca, mas ele é estatisticamente incapaz de discordar das próprias palavras.</p>
-    </section>
-
-    <section class="chapter">
-        <span class="chapter-number">05</span>
-        <h2>Fase 3: O "Como" (A Cura)</h2>
-        <p>O amador queimou o "Como" nos primeiros dois minutos da reunião. Você, que operou como um arquiteto tático, aguardou até que o Maurício confessasse a dor (Fase 1) e definisse o cenário ideal (Fase 2).</p>
-        <p>Você recebeu permissão moral e psicológica para apresentar o preço.</p>
-        <p>Nesta etapa, o seu produto deixa de ser um pedaço solto de tecnologia. Ele entra em cena embalado como a resposta literal ao que o Maurício verbalizou há dez segundos.</p>
-        <div class="glass-box">
-            <p><strong>Você:</strong> <em>"Maurício, você acabou de me dizer que o modelo atual de planilhas faz o seu negócio sangrar 20 mil reais em vendas perdidas, e que uma tela em tempo real resolveria a velocidade de decisão."</em></p>
-            <p><em>"É exatamente por isso que no nosso modelo de Assessoria nós matamos o WhatsApp e te integramos a uma arquitetura de painéis em tempo real."</em></p>
-        </div>
-        <p>A objeção de preço foi pulverizada antes de existir. O investimento que você vai propor não é mais comparado com o serviço de concorrentes genéricos; ele é comparado com os R$ 20.000 que ele já admitiu estar perdendo no mês.</p>
-    </section>
-
-    <section class="chapter">
-        <span class="chapter-number">06</span>
-        <h2>O Arsenal de Execução</h2>
-        <p>Para elevar a sua taxa de fechamento nas próximas 24 horas, imprimimos o gabarito que ancora negociações High-Ticket na Avantis. Preencha e leia na tela antes de apresentar o seu preço.</p>
+    <!-- Section 3 -->
+    <section>
+        <div class="chapter-num gs-scroll">03</div>
+        <h2 class="gs-title" style="margin-bottom: 60px; text-align: center;">O Framework de Desconstrução</h2>
         
-        <div class="glass-box">
-            <h3>O Roteiro Anti-Desconto (Fill in the Blanks)</h3>
-            <p><strong>Fase 1:</strong><br>
-            <em>"[NOME DO CLIENTE], você me contou que hoje vocês estão resolvendo a falta de tráfego usando [A TÁTICA RUIM/PLANILHA DELE]."</em><br><br>
-            <em>"Quando esse modelo amador falha, quanto você estima que essa operação está perdendo por mês no caixa final?"</em></p>
-            <p><strong>Fase 2:</strong><br>
-            <em>"E se nós apagarmos esse formato e colocarmos o [NOME DO SEU MÉTODO] rodando sozinho? O que isso liberaria na sua rotina já na próxima segunda-feira?"</em></p>
-            <p><strong>Fase 3:</strong><br>
-            <em>"Você me disse que estancaria um prejuízo de [VALOR DO PREJUÍZO]. O sistema que está desenhado nesta Proposta resolve esse gargalo pela raiz, e o investimento para plugar isso hoje é de [SEU PREÇO]."</em></p>
+        <div class="glass-panel gs-fade" style="margin-bottom: 40px;">
+            <h3>Fase 1: O "Por Que" (Diagnóstico)</h3>
+            <p style="color:var(--muted); font-size:1.1rem; margin-bottom: 30px;">O amador mostra a solução. O profissional escava a ferida até o cliente dar preço ao problema.</p>
+            <div class="dialogue">
+                <span>O Vendedor (Você)</span>
+                <p>"Maurício, como você acompanha o fechamento de metas hoje?"</p>
+            </div>
+            <div class="dialogue">
+                <span>O Cliente</span>
+                <p>"No WhatsApp. O vendedor manda a planilha e a gente tenta consolidar."</p>
+            </div>
+            <div class="dialogue">
+                <span>O Vendedor (O Golpe)</span>
+                <p>"E essa lentidão de depender de planilha já te custou caixa? Você já perdeu uma negociação porque demorou para ver a informação?"</p>
+            </div>
         </div>
 
-        <h3>As 3 Leis do Acesso Final</h3>
-        <ul class="rules">
-            <li><strong>Lei do Vácuo Financeiro:</strong> Quem fala a primeira palavra após anunciar o preço final, perde o negócio. Diga o valor e faça silêncio absoluto, mesmo que dure 30 segundos.</li>
-            <li><strong>Lei do Desvio:</strong> Se ele disparar <em>"Nossa, achei caro"</em>, você nunca defende o preço. Você responde: <em>"Caro em relação ao quê? Aos R$ 15 mil que você acabou de me dizer que perdeu mês passado por não ter isso estruturado?"</em></li>
-            <li><strong>Lei da Ancoragem Visual:</strong> Você finaliza o roteiro e compartilha o link da sua <em>Proposta Magnética</em> na hora. O impacto do design Dark SaaS aniquila a imagem de que você é apenas "mais um freelancer" e consolida o seu valor corporativo.</li>
-        </ul>
+        <div class="glass-panel gs-fade" style="margin-bottom: 40px;">
+            <h3>Fase 2: O Salto "E se..."</h3>
+            <p style="color:var(--muted); font-size:1.1rem; margin-bottom: 30px;">Injeção de imaginação. Faça o cliente argumentar a favor do seu produto e desenhar a utopia.</p>
+            <div class="dialogue">
+                <span>O Vendedor</span>
+                <p>"E se você tivesse essa visão em tempo real numa única tela? O que mudaria na sua operação amanhã?"</p>
+            </div>
+            <div class="dialogue">
+                <span>O Cliente (O Checkmate)</span>
+                <p>"Eu tomaria decisões na hora. Pararia de perder 20 mil reais por mês com furo de follow-up."</p>
+            </div>
+            <p style="margin-top:20px; font-weight: 500;">Não foi você quem disse que o sistema economiza 20 mil. Foi ele. Ele é incapaz de discordar das próprias palavras.</p>
+        </div>
+
+        <div class="glass-panel gs-fade">
+            <h3>Fase 3: O "Como" (A Cura)</h3>
+            <p style="color:var(--muted); font-size:1.1rem; margin-bottom: 30px;">Você recebeu permissão moral para cobrar. A objeção de preço deixa de existir quando comparada com a dor.</p>
+            <div class="dialogue">
+                <span>O Vendedor</span>
+                <p>"Você me disse que o modelo antigo te faz sangrar 20 mil reais todo mês. É exatamente por isso que nossa estrutura elimina o WhatsApp e te dá controle absoluto em tempo real."</p>
+            </div>
+        </div>
     </section>
+
+    <!-- Section 4 -->
+    <section style="min-height: auto; padding-bottom: 120px;">
+        <div class="chapter-num gs-scroll">04</div>
+        <div class="sec-title">
+            <h2 class="gs-title">Arsenal Operacional</h2>
+            <p class="gs-fade" style="color:var(--muted); margin-top:20px;">As Leis Inquebráveis do Acesso Final.</p>
+        </div>
+
+        <div class="arsenal-grid">
+            <div class="arsenal-card gs-fade">
+                <h3>01. A Lei do Vácuo Financeiro</h3>
+                <p>Quem fala a primeira palavra após anunciar o preço, perde o negócio. Diga o valor e sustente o silêncio absoluto. A pressão psicológica transfere a posse da decisão.</p>
+            </div>
+            <div class="arsenal-card gs-fade">
+                <h3>02. A Lei do Desvio</h3>
+                <p>Se a palavra "caro" surgir, nunca defenda o seu preço. Rebata com contraste: <em>"Caro em relação ao quê? Aos R$ 20 mil que você acabou de confessar que perde mensalmente?"</em></p>
+            </div>
+            <div class="arsenal-card gs-fade" style="grid-column: 1 / -1; background: var(--neon); padding: 40px; border-radius: 4px; color: var(--bg);">
+                <h3 style="color: var(--bg);">03. A Lei da Ancoragem Visual</h3>
+                <p style="color: rgba(0,0,0,0.8); font-weight: 500;">O argumento verbal evapora. O design permanece. Assim que aplicar a Fase 3, envie o link da sua <strong>Proposta Magnética</strong>. O impacto visual Dark SaaS aniquila qualquer imagem de "freelancer", forçando o cliente a enxergar você como uma corporação de elite.</p>
+            </div>
+        </div>
+    </section>
+
 </div>
 
-<script>
-    // Intersection Observer for scroll animations
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.15 });
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script> 
 
-    document.querySelectorAll('.chapter').forEach(section => {
-        observer.observe(section);
+<script>
+    // Smooth Scroll (Lenis)
+    const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+
+    // Custom Cursor
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('cursor-follower');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.6, ease: 'power3.out' });
+    });
+    document.querySelectorAll('a, .glass-panel, .badge').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+            follower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            follower.style.borderColor = 'transparent';
+            follower.style.background = 'rgba(239, 95, 165, 0.2)';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            follower.style.transform = 'translate(-50%, -50%) scale(1)';
+            follower.style.borderColor = 'rgba(239, 95, 165, 0.4)';
+            follower.style.background = 'transparent';
+        });
+    });
+
+    // Reading Progress
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        document.getElementById('progress').style.width = (winScroll / height) * 100 + "%";
+    });
+
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Titles
+    gsap.utils.toArray('.gs-title').forEach(title => {
+        gsap.fromTo(title, { y: 50, opacity: 0 }, {
+            scrollTrigger: { trigger: title, start: "top 85%" },
+            y: 0, opacity: 1, duration: 1, ease: "power4.out"
+        });
+    });
+
+    // Fades
+    gsap.utils.toArray('.gs-fade').forEach(el => {
+        gsap.fromTo(el, { y: 30, opacity: 0 }, {
+            scrollTrigger: { trigger: el, start: "top 85%" },
+            y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out"
+        });
+    });
+
+    // Chapter Numbers Parallax
+    gsap.utils.toArray('.gs-scroll').forEach(num => {
+        gsap.to(num, {
+            scrollTrigger: { trigger: num.parentElement, start: "top bottom", end: "bottom top", scrub: 1 },
+            y: 200, ease: "none"
+        });
+    });
+
+    // Lines
+    gsap.utils.toArray('.gs-width').forEach(line => {
+        gsap.fromTo(line, { width: 0 }, {
+            scrollTrigger: { trigger: line, start: "top 90%" },
+            width: 40, duration: 1, ease: "power3.out"
+        });
     });
 </script>
 </body>
